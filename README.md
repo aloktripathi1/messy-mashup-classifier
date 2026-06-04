@@ -163,7 +163,7 @@ Upload a music clip → 3 models process independently → weighted ensemble pre
 ## Setup
 
 ```bash
-git clone https://github.com/aloktripathi/music-genre-classification.git
+git clone https://github.com/aloktripathi1/music-genre-classification.git
 cd music-genre-classification
 pip install -r requirements.txt
 ```
