@@ -118,9 +118,18 @@ music-genre-classification/
 ├── LICENSE
 ├── requirements.txt
 ├── project_report.pdf
+├── .gitattributes
 ├── .gitignore
 │
-├── notebooks/                # Experiment notebooks
+├── assets/                   # Architecture diagrams and result images
+│   ├── kaggle_score.png
+│   ├── pipeline.png
+│   ├── scratch_cnn_arch.png
+│   ├── efficientnet_arch.png
+│   ├── ast_arch.png
+│   └── resnet50_arch.png
+│
+├── notebooks/                # Experiment notebooks (one per model)
 │   ├── 01_eda.ipynb
 │   ├── 02_cnn.ipynb
 │   ├── 03_efficientnet.ipynb
@@ -136,16 +145,24 @@ music-genre-classification/
 │   ├── inference.py          # Model loading & submission generation
 │   ├── ensemble.py           # Weight sweep & probability averaging
 │   └── models/
-│       ├── scratch_cnn.py
+│       ├── cnn.py
 │       ├── efficientnet.py
 │       ├── ast_model.py
-│       ├── resnet50.py
-│       └── multi_seed_ast.py
+│       ├── ast_ensemble.py
+│       └── resnet50.py
 │
-├── deployment/               # HuggingFace Spaces
-│   ├── app.py                # Streamlit app
+├── tests/                    # Pytest unit tests (CPU-only, no data required)
+│   ├── test_augmentation.py
+│   └── test_ensemble.py
+│
+├── deployment/               # HuggingFace Spaces (Streamlit + Docker)
+│   ├── app.py
 │   ├── Dockerfile
 │   └── README.md
+│
+└── .github/
+    └── workflows/
+        └── test.yml          # CI: runs pytest on push/PR
 ```
 
 ---
