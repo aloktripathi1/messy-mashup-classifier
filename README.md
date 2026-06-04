@@ -49,7 +49,7 @@ Training data consists of **clean separated stems** (drums, vocals, bass), but t
 | 7 | CNN + AST + ResNet (10/60/30) | — | 0.9504 |
 | 8 | **3-AST + AST v1 + CNN + ResNet** | — | **0.9614** |
 
-![Kaggle Score](src/assets/kaggle_score.png)
+![Kaggle Score](assets/kaggle_score.png)
 
 ---
 
@@ -58,26 +58,26 @@ Training data consists of **clean separated stems** (drums, vocals, bass), but t
 ### 1. Scratch CNN (Baseline)
 4 conv blocks (32→64→128→256), BatchNorm, ReLU, MaxPool, AdaptiveAvgPool, Dropout, Linear. **0.42M params**, no pretrained weights.
 
-![Scratch CNN Architecture](src/assets/ast_arch.png)
+![Scratch CNN Architecture](assets/scratch_cnn_arch.png)
 
 ### 2. EfficientNet-B0
 Mel Spectrogram → **InstanceNorm** → EfficientNet-B0 (ImageNet) → **GeM Pooling** (p=3.0) → Dropout(0.5) → Linear(10). **4M params**.
 
-![EfficientNet Architecture](src/assets/efficientnet_arch.png)
+![EfficientNet Architecture](assets/efficientnet_arch.png)
 
 ### 3. Audio Spectrogram Transformer (AST)
 Waveform → AST FeatureExtractor → **AST-base** (12-layer Transformer, AudioSet pretrained) → Linear(10). **86.2M params**. Uses self-attention to capture global temporal patterns across the full 10s clip.
 
-![AST Architecture](src/assets/ast_arch.png)
+![AST Architecture](assets/ast_arch.png)
 
 ### 4. ResNet-50
 Mel Spectrogram → **InstanceNorm** → ResNet-50 (ImageNet) → **GeM Pooling** (p=3.0) → Dropout(0.4) → Linear(10). **23.5M params**. Skip connections enable deep feature learning.
 
-![ResNet-50 Architecture](src/assets/resnet50_arch.png)
+![ResNet-50 Architecture](assets/resnet50_arch.png)
 
 ### 5. Final Ensemble Pipeline
 
-![Full Pipeline](src/assets/pipeline.png)
+![Full Pipeline](assets/pipeline.png)
 
 ---
 

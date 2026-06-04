@@ -1,19 +1,19 @@
 # core
-numpy
-pandas
-matplotlib
-seaborn
-tqdm
-scikit-learn
+numpy>=2.4.2
+pandas>=3.0.1
+matplotlib>=3.10.9
+seaborn>=0.13.2
+tqdm>=4.67.3
+scikit-learn>=1.8.0
 
 # audio
-librosa
-torchaudio
-torch
+librosa>=0.11.0
+torchaudio>=2.10.0
+torch>=2.10.0
 
 # deep learning
-transformers
-timm
+transformers>=5.2.0
+timm>=1.0.25
 
 # experiment tracking
-wandb
+wandb>=0.27.1
