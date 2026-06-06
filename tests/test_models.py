@@ -1,25 +1,32 @@
 """
 CPU-only forward-pass tests for the three model architectures.
-No checkpoint files, no real audio, no GPU required.
+No checkpoint files, no real audio files, no GPU required.
 Architectures are defined inline, matching src/models/ exactly.
+Uses torchaudio for mel spectrogram (no librosa dependency).
 """
 import numpy as np
-import pytest
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torchaudio.transforms as T
 import timm
-
-# ── shared helpers ────────────────────────────────────────────────────────────
 
 SR, DUR = 22050, 10.0
 N_MELS, N_FFT, HOP = 128, 2048, 512
 FMIN, FMAX = 20, 8000
 
-def sine_wave(freq=440, duration=DUR, sr=SR):
-    t = np.linspace(0, duration, int(sr * duration), endpoint=False)
-    return (np.sin(2 * np.pi * freq * t)).astype(np.float32)
+_mel_transform = T.MelSpectrogram(
+    sample_rate=SR, n_fft=N_FFT, hop_length=HOP,
+    n_mels=N_MELS, f_min=FMIN, f_max=FMAX,
+)
+_amp_to_db = T.AmplitudeToDB(top_db=80)
+
+
+def make_mel_input():
+    """Synthetic 440 Hz sine wave → (1, 1, n_mels, T) mel spectrogram tensor."""
+    t = np.linspace(0, DUR, int(SR * DUR), endpoint=False)
+    y = torch.from_numpy(np.sin(2 * np.pi * 440 * t).astype(np.float32))
+    mel = _amp_to_db(_mel_transform(y))          # (n_mels, T)
+    return mel.unsqueeze(0).unsqueeze(0)          # (1, 1, n_mels, T)
 
 
 class GeM(nn.Module):
@@ -54,19 +61,11 @@ class ScratchCNN(nn.Module):
 
 
 def test_scratch_cnn():
-    y = sine_wave()
-    # Manually compute mel spectrogram to feed as (1, 1, n_mels, time)
-    import librosa
-    S = librosa.feature.melspectrogram(y=y, sr=SR, n_fft=N_FFT, hop_length=HOP,
-                                        n_mels=N_MELS, fmin=FMIN, fmax=FMAX)
-    S_db = librosa.power_to_db(S, ref=np.max, top_db=80).astype(np.float32)
-    x = torch.from_numpy(S_db).unsqueeze(0).unsqueeze(0)  # (1, 1, 128, T)
-
+    x = make_mel_input()
     model = ScratchCNN(num_classes=10)
     model.eval()
     with torch.no_grad():
         out = model(x)
-
     assert out.shape == (1, 10), f"expected (1,10), got {out.shape}"
     assert not torch.isnan(out).any(), "NaN in ScratchCNN output"
 
@@ -85,23 +84,15 @@ class GenreClassifier(nn.Module):
 
     def forward(self, x):
         x = self.inst_norm(x)
-        feat = self.backbone(x)
-        return self.head(self.gem(feat))
+        return self.head(self.gem(self.backbone(x)))
 
 
 def test_efficientnet_cnn():
-    y = sine_wave()
-    import librosa
-    S = librosa.feature.melspectrogram(y=y, sr=SR, n_fft=N_FFT, hop_length=HOP,
-                                        n_mels=N_MELS, fmin=FMIN, fmax=FMAX)
-    S_db = librosa.power_to_db(S, ref=np.max, top_db=80).astype(np.float32)
-    x = torch.from_numpy(S_db).unsqueeze(0).unsqueeze(0)  # (1, 1, 128, T)
-
+    x = make_mel_input()
     model = GenreClassifier(num_classes=10)
     model.eval()
     with torch.no_grad():
         out = model(x)
-
     assert out.shape == (1, 10), f"expected (1,10), got {out.shape}"
     assert not torch.isnan(out).any(), "NaN in GenreClassifier output"
 
@@ -122,18 +113,11 @@ class GenreResNet(nn.Module):
 
 
 def test_resnet50():
-    y = sine_wave()
-    import librosa
-    S = librosa.feature.melspectrogram(y=y, sr=SR, n_fft=N_FFT, hop_length=HOP,
-                                        n_mels=N_MELS, fmin=FMIN, fmax=FMAX)
-    S_db = librosa.power_to_db(S, ref=np.max, top_db=80).astype(np.float32)
-    mel_t = torch.from_numpy(S_db).unsqueeze(0).unsqueeze(0)  # (1, 1, 128, T)
-    mel_t = nn.InstanceNorm2d(1, affine=False)(mel_t)
-
+    x = make_mel_input()
+    mel_t = nn.InstanceNorm2d(1, affine=False)(x)
     model = GenreResNet(num_classes=10)
     model.eval()
     with torch.no_grad():
         out = model(mel_t)
-
     assert out.shape == (1, 10), f"expected (1,10), got {out.shape}"
     assert not torch.isnan(out).any(), "NaN in GenreResNet output"
