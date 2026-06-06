@@ -54,7 +54,7 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 # WANDB
 import wandb
-wandb.login(key="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")
+wandb.login(key=os.environ.get("WANDB_API_KEY"))
 run = wandb.init(
     entity="23f3003225-indian-institute-of-technology-madras",
     project="23f3003225-dl-genai-project",
