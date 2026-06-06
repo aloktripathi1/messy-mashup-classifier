@@ -1,5 +1,7 @@
 # Messy Mashup - Music Genre Classification
 
+![CI](https://github.com/aloktripathi1/messy-mashup-classifier/actions/workflows/test.yml/badge.svg)
+
 **Predicting Music Genre from Noisy Mashups**
 
 Part of the **Jan 2026 Deep Learning & Generative AI (DLGenAI) Project** at IIT Madras.
@@ -113,7 +115,7 @@ Mel Spectrogram → **InstanceNorm** → ResNet-50 (ImageNet) → **GeM Pooling*
 ## Repo Structure
 
 ```
-music-genre-classification/
+messy-mashup-classifier/
 ├── README.md
 ├── LICENSE
 ├── requirements.txt
@@ -191,7 +193,7 @@ pip install -r requirements.txt
 
 - **Frameworks**: PyTorch, torchaudio, timm, HuggingFace Transformers
 - **Audio**: librosa, scikit-learn
-- **Tracking**: [Weights & Biases](https://wandb.ai/23f3003225-indian-institute-of-technology-madras/23f3003225-dl-genai-project)
+- **Tracking**: [Weights & Biases](https://wandb.ai/23f3003225-indian-institute-of-technology-madras/23f3003225-dl-genai-project) · [W&B Training Runs](https://wandb.ai/23f3003225-indian-institute-of-technology-madras/23f3003225-dl-genai-project)
 - **Deployment**: Streamlit + Docker on HuggingFace Spaces
 - **Training**: Lightning.ai (L4 GPU) and Kaggle (T4 GPU)
 
