@@ -155,7 +155,8 @@ messy-mashup-classifier/
 │
 ├── tests/                    # Pytest unit tests (CPU-only, no data required)
 │   ├── test_augmentation.py
-│   └── test_ensemble.py
+│   ├── test_ensemble.py
+│   └── test_models.py
 │
 ├── deployment/               # HuggingFace Spaces (Streamlit + Docker)
 │   ├── app.py
@@ -182,8 +183,8 @@ Upload a music clip → 3 models process independently → weighted ensemble pre
 ## Setup
 
 ```bash
-git clone https://github.com/aloktripathi1/music-genre-classification.git
-cd music-genre-classification
+git clone https://github.com/aloktripathi1/messy-mashup-classifier.git
+cd messy-mashup-classifier
 pip install -r requirements.txt
 ```
 
@@ -193,7 +194,7 @@ pip install -r requirements.txt
 
 - **Frameworks**: PyTorch, torchaudio, timm, HuggingFace Transformers
 - **Audio**: librosa, scikit-learn
-- **Tracking**: [Weights & Biases](https://wandb.ai/23f3003225-indian-institute-of-technology-madras/23f3003225-dl-genai-project) · [W&B Training Runs](https://wandb.ai/23f3003225-indian-institute-of-technology-madras/23f3003225-dl-genai-project)
+- **Tracking**: [Weights & Biases](https://wandb.ai/23f3003225-indian-institute-of-technology-madras/23f3003225-dl-genai-project)
 - **Deployment**: Streamlit + Docker on HuggingFace Spaces
 - **Training**: Lightning.ai (L4 GPU) and Kaggle (T4 GPU)
 
